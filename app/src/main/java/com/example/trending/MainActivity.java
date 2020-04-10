@@ -26,7 +26,12 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i<=10; i++){
             Items item = new Items(
                     "Name " + i+1,
-                    "some dummy data"
+                    "Project Name",
+                    "Up branch to easily missed by do. Admiration considered acceptance too led one melancholy expression.",
+                    "3994",
+                    "C++",
+                    "3994",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSYc0JKEV33KR7KNAUFIoLqfqCK0qpRLblxeR7cbpLCZd9BqbLi&usqp=CAU"
             );
             usersList.add(item);
         }

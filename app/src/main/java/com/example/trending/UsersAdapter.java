@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -20,8 +21,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     private List<Items> mData;
     private Context mContext;
 
-    public UsersAdapter(List<Items> nData, Context mContext) {
-        this.mData = nData;
+    public UsersAdapter(List<Items> mData, Context mContext) {
+        this.mData = mData;
         this.mContext = mContext;
     }
 
@@ -38,10 +39,16 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         Items item = mData.get(i);
 
-        myViewHolder.textViewHead.setText(item.getName());
+        myViewHolder.author.setText(item.getAuthor());
+        myViewHolder.projectName.setText(item.getProject_name());
         myViewHolder.description.setText(item.getDescriptions());
-        //myViewHolder.userImage.image(R.drawable.default_profile_image);
-        Picasso.get().load("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fno%2Bprofile%2Bpicture&psig=AOvVaw10rRmRAmprGVM0tc0aStOg&ust=1586591926975000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKD3x9Kx3egCFQAAAAAdAAAAABAD").placeholder(R.drawable.default_profile_image).into(myViewHolder.userImage);
+        myViewHolder.star.setText(item.getStars());
+        myViewHolder.language.setText(item.getLanguage());
+        myViewHolder.fork.setText(item.getForks());
+        Picasso.get().load(mData.get(i).getProfile_image()).placeholder(R.drawable.default_profile_image).into(myViewHolder.userImage);
+
+        boolean isExpanded = mData.get(i).isExpanded();
+        myViewHolder.expansionLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -51,15 +58,34 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textViewHead;
+        public TextView author;
+        public TextView projectName;
         public TextView description;
+        public TextView star;
+        public TextView language;
+        public TextView fork;
         public CircleImageView userImage;
+        LinearLayout expansionLayout;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textViewHead = (TextView) itemView.findViewById(R.id.head);
+            author = (TextView) itemView.findViewById(R.id.author);
+            projectName = (TextView) itemView.findViewById(R.id.project_name);
             description = (TextView) itemView.findViewById(R.id.description);
+            star = (TextView) itemView.findViewById(R.id.stars_count);
+            language = (TextView) itemView.findViewById(R.id.language_name);
+            fork = (TextView) itemView.findViewById(R.id.fork_count);
             userImage = (CircleImageView) itemView.findViewById(R.id.all_users_profile_image);
+            expansionLayout = (LinearLayout) itemView.findViewById(R.id.expandableLayout);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Items item = mData.get(getAdapterPosition());
+                    item.setExpanded(!item.isExpanded());
+                    notifyItemChanged(getAdapterPosition());
+                }
+            });
         }
     }
 }

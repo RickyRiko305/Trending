@@ -1,28 +1,50 @@
 package com.example.trending;
 
 public class Items {
-    private String name;
+    private String author;
+    private String project_name;
     private String descriptions;
     private String stars;
     private String language;
     private String forks;
+    private String profile_image;
+    private boolean expanded;
 
     public Items (){}
 
-    public Items (String name,String descriptions){//, String stars, String language, String forks){
-        this.name = name;
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+
+    public Items (String author, String project_name, String descriptions, String stars, String language, String forks, String profile_image){
+        this.author = author;
+        this.project_name = project_name;
         this.descriptions = descriptions;
-//        this.stars = stars;
-//        this.language = language;
-//        this.forks = forks;
+        this.stars = stars;
+        this.language = language;
+        this.forks = forks;
+        this.profile_image = profile_image;
+        this.expanded = false;
     }
 
-    public String getName() {
-        return name;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getProject_name() {
+        return project_name;
+    }
+
+    public void setProject_name(String project_name) {
+        this.project_name = project_name;
     }
 
     public String getDescriptions() {
@@ -55,5 +77,13 @@ public class Items {
 
     public void setForks(String forks) {
         this.forks = forks;
+    }
+
+    public String getProfile_image() {
+        return profile_image;
+    }
+
+    public void setProfile_image(String profile_image) {
+        this.profile_image = profile_image;
     }
 }
