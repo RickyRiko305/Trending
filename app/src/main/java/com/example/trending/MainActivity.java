@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.example.trending.api.ApiClient;
 import com.example.trending.api.ApiInterface;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,14 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     SwipeRefreshLayout swipeRefreshLayout;
 
+    private ShimmerFrameLayout shimmerFrameLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        shimmerFrameLayout = (ShimmerFrameLayout) findViewById(R.id.shimmer_view);
 
         allUsersList = (RecyclerView) findViewById(R.id.all_users_list);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -59,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Items>> call, Response<List<Items>> response) {
                 List<Items> Item = response.body();
                 usersAdapter = new UsersAdapter(Item,MainActivity.this);
-                //allUsersList.setVisibility(View.VISIBLE);
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                allUsersList.setVisibility(View.VISIBLE);
                 allUsersList.setAdapter(usersAdapter);
 
             }
@@ -70,4 +77,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        shimmerFrameLayout.startShimmer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        shimmerFrameLayout.stopShimmer();
+    }
+
 }

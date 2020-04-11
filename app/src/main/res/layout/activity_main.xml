@@ -10,18 +10,63 @@
         layout="@layout/app_bar_layout"
         android:id="@+id/all_users_app_bar"></include>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_below="@+id/all_users_app_bar">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/all_users_list"
+        <com.facebook.shimmer.ShimmerFrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/all_users_app_bar"></android.support.v7.widget.RecyclerView>
+            android:id="@+id/shimmer_view">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <include
+                    layout="@layout/place_holder_layout"/>
+                <include
+                    layout="@layout/place_holder_layout"/>
+                <include
+                    layout="@layout/place_holder_layout"/>
+                <include
+                    layout="@layout/place_holder_layout"/>
+                <include
+                    layout="@layout/place_holder_layout"/>
+                <include
+                    layout="@layout/place_holder_layout"/>
+                <include
+                    layout="@layout/place_holder_layout"/>
+                <include
+                    layout="@layout/place_holder_layout"/>
+                <include
+                    layout="@layout/place_holder_layout"/>
+
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/all_users_app_bar">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/all_users_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/all_users_app_bar"></android.support.v7.widget.RecyclerView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    </LinearLayout>
+
 
 </RelativeLayout>
