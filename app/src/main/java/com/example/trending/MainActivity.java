@@ -5,9 +5,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
+import com.example.trending.api.ApiClient;
+import com.example.trending.api.ApiInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,47 +34,40 @@ public class MainActivity extends AppCompatActivity {
         allUsersList = (RecyclerView) findViewById(R.id.all_users_list);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
-        for(int i=0; i<=10; i++){
-            Items item = new Items(
-                    "Name " + i+1,
-                    "Project Name",
-                    "Up branch to easily missed by do. Admiration considered acceptance too led one melancholy expression.",
-                    "3994",
-                    "C++",
-                    "3994",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSYc0JKEV33KR7KNAUFIoLqfqCK0qpRLblxeR7cbpLCZd9BqbLi&usqp=CAU"
-            );
-            usersList.add(item);
-        }
-
         usersAdapter = new UsersAdapter(usersList,this);
         linearLayoutManager = new LinearLayoutManager(this);
         allUsersList.setHasFixedSize(true);
         allUsersList.setLayoutManager(linearLayoutManager);
-        allUsersList.setAdapter(usersAdapter);
+        getUsers();
+        //allUsersList.setAdapter(usersAdapter);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                updateRecyclerView();
+                getUsers();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
-    public void updateRecyclerView(){
-        List<Items> u = new ArrayList<>();
-        Items item = new Items(
-                "Name 00 ",
-                "Project Name",
-                "Up branch to easily missed by do. Admiration considered acceptance too led one melancholy expression.",
-                "3994",
-                "C++",
-                "3994",
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSYc0JKEV33KR7KNAUFIoLqfqCK0qpRLblxeR7cbpLCZd9BqbLi&usqp=CAU"
-        );
-        usersList.add(item);
-        usersAdapter = new UsersAdapter(usersList,this);
-        allUsersList.setAdapter(usersAdapter);
+    public void getUsers(){
+        //shimmerLayout.startShimmerAnimation();
+        Call<List<Items>> call = ApiClient.getApiClient().create(ApiInterface.class).getUserInfo();
+
+        call.enqueue(new Callback<List<Items>>() {
+            @Override
+            public void onResponse(Call<List<Items>> call, Response<List<Items>> response) {
+                List<Items> Item = response.body();
+                usersAdapter = new UsersAdapter(Item,MainActivity.this);
+                //allUsersList.setVisibility(View.VISIBLE);
+                allUsersList.setAdapter(usersAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Items>> call, Throwable t) {
+
+            }
+        });
     }
 }

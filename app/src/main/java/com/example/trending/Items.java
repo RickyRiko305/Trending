@@ -1,13 +1,29 @@
 package com.example.trending;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Items {
+    @SerializedName("author")
     private String author;
+
+    @SerializedName("name")
     private String project_name;
+
+    @SerializedName("description")
     private String descriptions;
+
+    @SerializedName("stars")
     private String stars;
+
+    @SerializedName("language")
     private String language;
+
+    @SerializedName("forks")
     private String forks;
+
+    @SerializedName("avatar")
     private String profile_image;
+
     private boolean expanded;
 
     public Items (){}
