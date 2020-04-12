@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.example.trending.api.ApiClient;
 import com.example.trending.api.ApiInterface;
@@ -28,11 +30,17 @@ public class MainActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
 
     private ShimmerFrameLayout shimmerFrameLayout;
+    private RelativeLayout noInternetLayout;
+    private Button retryButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        retryButton = (Button) findViewById(R.id.retry_button);
+
+        noInternetLayout = (RelativeLayout) findViewById(R.id.no_internet_layout);
 
         shimmerFrameLayout = (ShimmerFrameLayout) findViewById(R.id.shimmer_view);
 
@@ -46,9 +54,22 @@ public class MainActivity extends AppCompatActivity {
         getUsers();
         //allUsersList.setAdapter(usersAdapter);
 
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                noInternetLayout.setVisibility(View.GONE);
+                shimmerFrameLayout.startShimmer();
+                shimmerFrameLayout.setVisibility(View.VISIBLE);
+                getUsers();
+            }
+        });
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                allUsersList.setVisibility(View.GONE);
+                shimmerFrameLayout.setVisibility(View.VISIBLE);
+                shimmerFrameLayout.startShimmer();
                 getUsers();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -63,16 +84,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Items>> call, Response<List<Items>> response) {
                 List<Items> Item = response.body();
-                usersAdapter = new UsersAdapter(Item,MainActivity.this);
+                usersList = response.body();
+                usersAdapter = new UsersAdapter(usersList,MainActivity.this);
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);
                 allUsersList.setVisibility(View.VISIBLE);
                 allUsersList.setAdapter(usersAdapter);
+                noInternetLayout.setVisibility(View.GONE);
 
             }
 
             @Override
             public void onFailure(Call<List<Items>> call, Throwable t) {
+                allUsersList.setVisibility(View.GONE);
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                noInternetLayout.setVisibility(View.VISIBLE);
 
             }
         });
