@@ -2,6 +2,8 @@ package com.example.trending;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Comparator;
+
 public class Items {
     @SerializedName("author")
     private String author;
@@ -102,4 +104,28 @@ public class Items {
     public void setProfile_image(String profile_image) {
         this.profile_image = profile_image;
     }
+
+    public static Comparator<Items> nameComparator = new Comparator<Items>() {
+
+        public int compare(Items s1, Items s2) {
+            String name1 = s1.getAuthor().toUpperCase();
+            String name2 = s2.getAuthor().toUpperCase();
+
+            return name1.compareTo(name2);
+        }
+    };
+
+    public static Comparator<Items> starComparator = new Comparator<Items>() {
+
+        public int compare(Items s1, Items s2) {
+            String stringStar1 = s1.getStars().toUpperCase();
+            String stringStar2 = s2.getStars().toUpperCase();
+
+            int star1 = Integer.parseInt(stringStar1);
+            int star2 = Integer.parseInt(stringStar2);
+
+            return star1-star2;
+
+        }
+    };
 }

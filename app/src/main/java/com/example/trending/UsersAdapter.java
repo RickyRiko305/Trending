@@ -20,6 +20,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
     private List<Items> mData;
     private Context mContext;
+    private int last = -1;
 
     public UsersAdapter(List<Items> mData, Context mContext) {
         this.mData = mData;
@@ -83,7 +84,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
                 public void onClick(View view) {
                     Items item = mData.get(getAdapterPosition());
                     item.setExpanded(!item.isExpanded());
+                    if(last>=0 && last!= getAdapterPosition()){
+                        Items lastItem = mData.get(last);
+                        lastItem.setExpanded(false);
+                    }
                     notifyItemChanged(getAdapterPosition());
+                    notifyItemChanged(last);
+                    last = getAdapterPosition();
                 }
             });
         }

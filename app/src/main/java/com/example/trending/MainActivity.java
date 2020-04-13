@@ -1,12 +1,18 @@
 package com.example.trending;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 
 import com.example.trending.api.ApiClient;
@@ -14,6 +20,7 @@ import com.example.trending.api.ApiInterface;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,11 +39,14 @@ public class MainActivity extends AppCompatActivity {
     private ShimmerFrameLayout shimmerFrameLayout;
     private RelativeLayout noInternetLayout;
     private Button retryButton;
+    private ImageView menuImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        menuImage = findViewById(R.id.menu_button);
 
         retryButton = (Button) findViewById(R.id.retry_button);
 
@@ -74,6 +84,46 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
+        menuImage.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                //Context context = new ContextThemeWrapper(MainActivity.this, view);
+                final PopupMenu popupMenu = new PopupMenu(MainActivity.this,view);
+                popupMenu.getMenuInflater().inflate(R.menu.main_menu, popupMenu.getMenu());
+                popupMenu.setGravity(Gravity.START);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        //Toast.makeText(MainActivity.this,"" + menuItem.getTitle(), Toast.LENGTH_LONG).show();
+                        switch (menuItem.getItemId()){
+                            case R.id.sort_by_stars:
+                                sortByStar();
+                                return true;
+                            case R.id.sort_by_name:
+                                sortByName();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
+    }
+
+    private void sortByStar() {
+        Collections.sort(usersList, Items.starComparator);
+        usersAdapter = new UsersAdapter(usersList, this);
+        allUsersList.setAdapter(usersAdapter);
+    }
+
+    private void sortByName() {
+        Collections.sort(usersList, Items.nameComparator);
+        usersAdapter = new UsersAdapter(usersList, this);
+        allUsersList.setAdapter(usersAdapter);
     }
 
     public void getUsers(){
