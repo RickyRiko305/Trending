@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private UsersAdapter usersAdapter;
     private List<Items> usersList = new ArrayList<>();
 
-    private LinearLayoutManager linearLayoutManager;
+        private LinearLayoutManager linearLayoutManager;
     SwipeRefreshLayout swipeRefreshLayout;
 
     private ShimmerFrameLayout shimmerFrameLayout;
@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 allUsersList.setVisibility(View.GONE);
+                noInternetLayout.setVisibility(View.GONE);
                 shimmerFrameLayout.setVisibility(View.VISIBLE);
                 shimmerFrameLayout.startShimmer();
                 getUsers();
